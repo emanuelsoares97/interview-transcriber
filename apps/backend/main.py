@@ -6,6 +6,7 @@ import base64
 import tempfile
 import whisper
 import os
+import re
 
 app = Flask(__name__)
 CORS(app)
@@ -22,7 +23,9 @@ def index():
 @socketio.on('audio_chunk')
 def handle_audio_chunk(data):
     try:
-        # Decodificar base64 para bytes
+        # Se vier como DataURL, remova o prefixo
+        if isinstance(data, str) and data.startswith('data:'):
+            data = re.sub('^data:audio/\\w+;base64,', '', data)
         audio_bytes = base64.b64decode(data)
         # Salvar como arquivo temporário WEBM
         with tempfile.NamedTemporaryFile(delete=False, suffix='.webm') as tmpfile:
