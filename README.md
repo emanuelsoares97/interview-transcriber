@@ -1,45 +1,39 @@
 # Interview Transcriber (Monorepo)
 
-## O que é?
+## Pra que serve?
 
-Transcrição em tempo real de entrevistas, reuniões ou qualquer áudio captado pelo microfone **e/ou** pelo sistema (áudio do PC), com backend Flask + Whisper e frontend em JavaScript puro.
+Transcreve em tempo real o que você fala no microfone **e/ou** o que está rolando no PC (tipo áudio de reunião, vídeo, etc). Backend em Flask + Whisper, frontend em JS puro. Simples e direto.
 
 ---
 
-## Estrutura
+## Estrutura do projeto
 
 ```
 repo-root/
-│
-├── apps/
-│   ├── backend/          # Flask + Socket.IO
-│   └── frontend/         # JS puro
-│
-├── packages/             # Código compartilhado
-│   └── common-utils/
-│
-├── docker/               # Dockerfiles e compose
-│
-├── .env.example          # Variáveis de ambiente modelo
-└── README.md             # Este guia resumido
+  apps/
+    backend/    # Flask + Socket.IO
+    frontend/   # JS puro
+  packages/     # utilidades compartilhadas
+  docker/       # Docker e compose
+  .env.example  # exemplo de variáveis
+  README.md     # este arquivo
 ```
 
 ---
 
-## Como rodar
+## Como rodar rapidão
 
 ```bash
 git clone ...
 cd interview-transcriber
 python -m venv .venv && source .venv/bin/activate
 pip install -r apps/backend/requirements.txt
-cp .env.example .env  # adicione suas chaves
-# Em terminais separados:
+cp .env.example .env  # se precisar
 python apps/backend/main.py  # backend
-# Acesse http://localhost:5000 para o frontend
+# Abre http://localhost:5000 no navegador pra usar o frontend
 ```
 
-Ou use Docker:
+Se preferir Docker:
 
 ```bash
 docker compose up --build
@@ -47,67 +41,66 @@ docker compose up --build
 
 ---
 
-## ⚠️ Limitações e dicas para áudio do sistema (Windows, Linux, macOS)
+## Sobre áudio do sistema (Windows, Linux, macOS)
 
 ### Microfone
-- Funciona em qualquer sistema, sem configuração extra.
+- Funciona em qualquer sistema, sem stress.
 
-### Áudio do sistema (o que você ouve nos fones/alto-falantes)
+### Áudio do PC (o que você ouve)
 - **Windows:**
-  - O Windows NÃO expõe o áudio do sistema como input por padrão.
-  - Para capturar, use um dispositivo virtual como [VB-Audio Cable (grátis)](https://vb-audio.com/Cable/) ou [VoiceMeeter](https://vb-audio.com/Voicemeeter/).
-  - Após instalar, defina o "CABLE Input" como saída padrão do Windows ou do app de chamada.
-  - No backend, selecione o dispositivo "CABLE Output" para gravação.
-  - Para ouvir nos fones, ative "Escutar este dispositivo" nas propriedades do "CABLE Output".
+  - O Windows não deixa capturar o áudio do PC direto.
+  - Pra isso, tem que instalar [VB-Audio Cable](https://vb-audio.com/Cable/) ou [VoiceMeeter](https://vb-audio.com/Voicemeeter/).
+  - Depois de instalar, coloca o "CABLE Input" como saída padrão do Windows ou do app.
+  - No backend, grava do "CABLE Output".
+  - Pra ouvir nos fones, ativa "Escutar este dispositivo" nas propriedades do "CABLE Output".
 - **Linux:**
-  - Use PulseAudio/ALSA. Procure por "Monitor of ..." nos dispositivos de gravação.
+  - Usa PulseAudio/ALSA. Procura por "Monitor of ..." nos dispositivos de gravação.
 - **macOS:**
-  - Use [BlackHole](https://existential.audio/blackhole/) ou [Loopback](https://rogueamoeba.com/loopback/).
+  - Usa [BlackHole](https://existential.audio/blackhole/) ou [Loopback](https://rogueamoeba.com/loopback/).
 
-Se não quiser instalar nada, o app funcionará apenas com o microfone.
-
----
-
-## Como escolher o dispositivo de áudio
-- O backend tenta detectar dispositivos automaticamente.
-- Se não encontrar, mostre uma mensagem amigável no frontend/backend explicando o que falta e como resolver.
-- Permita que o usuário escolha o dispositivo de áudio via variável de ambiente ou configuração.
+Se não quiser instalar nada, só vai funcionar o microfone mesmo.
 
 ---
 
-## Troubleshooting (Problemas comuns)
+## Dicas rápidas
+- O backend tenta achar o dispositivo certo sozinho.
+- Se não achar, vai avisar no frontend/backend o que falta.
+- Dá pra escolher o dispositivo por variável de ambiente/config.
+
+---
+
+## Problemas comuns
 - **System audio não aparece:**
-  - Verifique se o dispositivo virtual está instalado e configurado.
-  - Teste com `ffmpeg -list_devices true -f dshow -i dummy` (Windows) para ver se aparece "CABLE Output".
-- **Só capta o microfone:**
-  - O Windows não expõe o áudio do sistema sem dispositivo virtual.
+  - Instala e configura o dispositivo virtual.
+  - Testa com `ffmpeg -list_devices true -f dshow -i dummy` (Windows) pra ver se aparece "CABLE Output".
+- **Só pega o mic:**
+  - Windows não libera o áudio do PC sem virtual cable.
 - **Erro de permissão:**
-  - Execute o terminal como administrador.
-- **Docker não acessa áudio:**
-  - Prefira rodar localmente para testes de áudio.
+  - Roda o terminal como admin.
+- **Docker não pega áudio:**
+  - Roda local pra testar áudio.
 
 ---
 
-## Privacidade e ética
-- O app pode captar qualquer áudio do sistema e microfone.
-- Use de forma responsável e respeite a privacidade de terceiros.
+## Privacidade
+- O app pode gravar qualquer áudio do PC e do mic.
+- Use com responsabilidade.
 
 ---
 
-## Contribuição
-- Pull requests e issues são bem-vindos!
-- Veja o arquivo CONTRIBUTING.md para detalhes.
-- Licença: MIT
+## Quer contribuir?
+- PR e issues são bem-vindos!
+- Licença MIT.
 
 ---
 
-## Prints e exemplos
+## Exemplo
 
 ![Exemplo de uso](docs/demo.gif)
 
 ---
 
-## Referências
+## Links úteis
 - [Whisper (OpenAI)](https://github.com/openai/whisper)
 - [VB-Audio Cable](https://vb-audio.com/Cable/)
 - [VoiceMeeter](https://vb-audio.com/Voicemeeter/)
