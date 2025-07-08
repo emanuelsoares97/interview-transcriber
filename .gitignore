@@ -1,45 +1,47 @@
-#--------------------------#
-# Magento Default Files    #
-#--------------------------#
+# Ambiente virtual
+venv/
+ENV/
+env/
+.venv/
 
-/PATCH_*.sh
+# Logs
+logs/
+*.log
 
-/app/etc/local.xml
+# Arquivos de ambiente
+.env
+*.env
 
-/media/*
-!/media/.htaccess
+# Cache do Python
+app/__pycache__/
+__pycache__/
+*.py[cod]
+*.pyo
 
-!/media/customer
-/media/customer/*
-!/media/customer/.htaccess
+# Cache de testes
+.pytest_cache/
 
-!/media/dhl
-/media/dhl/*
-!/media/dhl/logo.jpg
+# Banco de dados local
+db/*.db
+*.sqlite3
 
-!/media/downloadable
-/media/downloadable/*
-!/media/downloadable/.htaccess
+# Arquivos temporários de editores
+*.swp
+*.swo
+*.bak
+*~
 
-!/media/xmlconnect
-/media/xmlconnect/*
+# VSCode
+.vscode/
 
-!/media/xmlconnect/custom
-/media/xmlconnect/custom/*
-!/media/xmlconnect/custom/ok.gif
+# Arquivos do sistema
+.DS_Store
+Thumbs.db
 
-!/media/xmlconnect/original
-/media/xmlconnect/original/*
-!/media/xmlconnect/original/ok.gif
+reiniciar_db.py
 
-!/media/xmlconnect/system
-/media/xmlconnect/system/*
-!/media/xmlconnect/system/ok.gif
+testtt.py
 
-/var/*
-!/var/.htaccess
+instance/
 
-!/var/package
-/var/package/*
-!/var/package/*.xml
-
+notas.txt

@@ -1,5 +1,6 @@
 flask
-flask-cors 
-flask-socketio
-eventlet 
-whisper 
+flask_cors
+flask_socketio
+eventlet
+whisper
+sounddevice 
