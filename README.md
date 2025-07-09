@@ -123,3 +123,9 @@ se não quiseres instalar nada, só funciona o microfone.
 - [voicemeeter](https://vb-audio.com/voicemeeter/)
 - [blackhole (macos)](https://existential.audio/blackhole/)
 
+---
+
+## nota
+
+este projeto foi desenvolvido com apoio de ia (chatgpt/copilot) para acelerar e organizar o código.
+
