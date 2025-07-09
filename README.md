@@ -118,3 +118,5 @@ se não quiseres instalar nada, só funciona o microfone.
 - [vb-audio cable](https://vb-audio.com/cable/)
 - [voicemeeter](https://vb-audio.com/voicemeeter/)
 - [blackhole (macos)](https://existential.audio/blackhole/)
+
+![logo](transcriber.png)
