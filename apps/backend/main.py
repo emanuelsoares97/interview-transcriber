@@ -1,7 +1,9 @@
+import eventlet
+eventlet.monkey_patch()
+
 from flask import Flask, jsonify, request, send_from_directory
 from flask_cors import CORS
 from flask_socketio import SocketIO, emit
-import eventlet
 import base64
 import tempfile
 import whisper
@@ -45,6 +47,11 @@ def serve_static(path):
 def emit_test():
     socketio.emit('transcript', {'text': 'TESTE_BACKEND_EVENTO'})
     return {'status': 'ok', 'msg': 'Evento transcript emitido'}
+
+@app.route('/emit_system_test')
+def emit_system_test():
+    socketio.emit('system_transcript', {'text': 'TESTE SYSTEM AUDIO'})
+    return {'status': 'ok', 'msg': 'system_transcript emitido'}
 
 @socketio.on('connect')
 def handle_connect():
@@ -114,18 +121,19 @@ def handle_audio_chunk(data):
         print('\033[91mErro ao processar audio_chunk:\033[0m', e)
 
 def system_audio_worker():
-    duration = 2  # segundos
+    duration = 3  # segundos
     while not system_audio_stop_event.is_set():
         try:
-            print('[system_audio_worker] Capturando áudio do sistema via ffmpeg/WASAPI...')
+            print('[system_audio_worker] Capturando áudio do sistema via ffmpeg/DShow...')
             with tempfile.NamedTemporaryFile(delete=False, suffix='.wav') as tmpfile:
                 tmpfile_path = tmpfile.name
-            # Comando ffmpeg para capturar apenas o áudio do PC (WASAPI loopback)
+            # Comando ffmpeg para capturar apenas o áudio do PC (VB-Cable via DirectShow)
+            # Se o nome do dispositivo for diferente, ajusta aqui:
             ffmpeg_cmd = [
                 'ffmpeg',
                 '-y',
-                '-f', 'wasapi',
-                '-i', 'audio=Auricular (Plantronics Blackwire 3220 Series)',
+                '-f', 'dshow',
+                '-i', 'audio=CABLE Output (VB-Audio Virtual Cable)',
                 '-t', str(duration),
                 '-ar', '16000', '-ac', '1', '-f', 'wav', tmpfile_path
             ]
@@ -148,11 +156,13 @@ def system_audio_worker():
                     print(f'\033[93m[backend] Ignorado system (vazio, erro ou repetido)\033[0m')
                 else:
                     print(f'\033[96m[backend] Emitindo system_transcript: {transcript_text}\033[0m')
-                    socketio.emit('system_transcript', {'text': transcript_text})
+                    with app.app_context():
+                        socketio.emit('system_transcript', {'text': transcript_text})
                     last_transcript['system'] = transcript_text
             else:
                 print(f'\033[96m[backend] Emitindo system_transcript: {transcript_text}\033[0m')
-                socketio.emit('system_transcript', {'text': transcript_text})
+                with app.app_context():
+                    socketio.emit('system_transcript', {'text': transcript_text})
                 last_transcript['system'] = transcript_text
         except Exception as e:
             print('[system_audio_worker] Erro geral:', e)
@@ -161,20 +171,21 @@ def system_audio_worker():
 
 @socketio.on('start_system_audio')
 def start_system_audio():
+    print('[backend] RECEBIDO start_system_audio')
     global system_audio_thread
     if system_audio_thread and system_audio_thread.is_alive():
         print('[backend] system_audio_worker já está rodando.')
         return
     print('[backend] Iniciando system_audio_worker...')
     system_audio_stop_event.clear()
-    system_audio_thread = threading.Thread(target=system_audio_worker, daemon=True)
-    system_audio_thread.start()
+    system_audio_thread = socketio.start_background_task(system_audio_worker)
 
 @socketio.on('stop_system_audio')
 def stop_system_audio():
+    print('[backend] RECEBIDO stop_system_audio')
     print('[backend] Parando system_audio_worker...')
     system_audio_stop_event.set()
 
 if __name__ == '__main__':
-    # Usar eventlet para WebSocket
-    socketio.run(app, debug=True, host='0.0.0.0')
+    import eventlet
+    socketio.run(app, debug=True, host='0.0.0.0', port=5000, use_reloader=True)

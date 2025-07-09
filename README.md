@@ -53,10 +53,17 @@ docker compose up --build
   - depois de instalar, mete o "cable input" como saída padrão do windows ou da app.
   - no backend, grava do "cable output".
   - para ouvires nos fones, ativa "escutar este dispositivo" nas propriedades do "cable output".
-- linux:
-  - usa pulseaudio/alsa. procura por "monitor of ..." nos dispositivos de gravação.
-- macos:
-  - usa [blackhole](https://existential.audio/blackhole/) ou [loopback](https://rogueamoeba.com/loopback/).
+
+  #### passo a passo vb-audio cable (windows)
+  1. instala o vb-audio cable e reinicia o pc.
+  2. vai ao painel de controlo de som > separador "reprodução".
+  3. mete o **CABLE Input (VB-Audio Virtual Cable)** como dispositivo predefinido.
+  4. vai ao separador "gravação", seleciona **CABLE Output**, clica em propriedades.
+  5. no separador "escutar", ativa **escutar este dispositivo** e escolhe os teus fones/headset.
+  6. clica em ok. agora ouves tudo nos fones e podes gravar o áudio do pc escolhendo o "cable output" no programa.
+  7. o microfone continua a funcionar normalmente.
+  8. se quiseres gravar mic + sistema ao mesmo tempo, precisas de misturar (ex: voicemeeter).
+
 
 se não quiseres instalar nada, só funciona o microfone.
 
