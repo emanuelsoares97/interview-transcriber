@@ -4,6 +4,7 @@ import eventlet
 
 eventlet.monkey_patch()
 
+import os
 import threading
 from flask import Flask, jsonify, request, send_from_directory
 from flask_cors import CORS
@@ -11,9 +12,8 @@ from flask_socketio import SocketIO, emit
 from config import FRONTEND_DIR, FILTER_TRANSCRIPTS
 from audio_processing import process_audio_chunk
 from system_audio_worker import system_audio_worker
-import os
 
-
+# aqui começa a app flask
 app = Flask(__name__)
 CORS(app)
 socketio = SocketIO(app, cors_allowed_origins="*")
