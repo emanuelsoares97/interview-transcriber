@@ -11,6 +11,7 @@ from flask_socketio import SocketIO, emit
 from config import FRONTEND_DIR, FILTER_TRANSCRIPTS
 from audio_processing import process_audio_chunk
 from system_audio_worker import system_audio_worker
+import os
 
 
 app = Flask(__name__)
@@ -100,4 +101,5 @@ def stop_system_audio():
 
 # aqui é onde se arranca tudo
 if __name__ == '__main__':
-    socketio.run(app, debug=True, host='0.0.0.0', port=5000, use_reloader=True) 
+    port = int(os.environ.get("PORT", 5000))
+    socketio.run(app, debug=True, host='0.0.0.0', port=port, use_reloader=True) 

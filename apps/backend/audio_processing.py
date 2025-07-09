@@ -13,7 +13,7 @@ whisper_model = whisper.load_model(WHISPER_MODEL_SIZE)
 def process_audio_chunk(data, language='en'):
     # se vier como dataurl, tira o prefixo
     if isinstance(data, str) and data.startswith('data:'):
-        data = re.sub('^data:audio/\w+;base64,', '', data)
+        data = re.sub(r'^data:audio/\w+;base64,', '', data)
     audio_bytes = base64.b64decode(data)
     # guarda como webm temporário
     with tempfile.NamedTemporaryFile(delete=False, suffix='.webm') as tmpfile:
