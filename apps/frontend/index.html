@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <title>transcrições misturadas</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <h2>Transcrições</h2>
+    <div id="debugBar">
+      <span id="socketStatus">socket: ...</span> |
+      <span id="lastEvent">último evento: ...</span>
+    </div>
+    <div id="mixedTranscript"></div>
+    <div class="button-group">
+      <button id="startBtn">iniciar mic</button>
+      <button id="stopBtn" disabled>parar mic</button>
+      <button id="startSystemBtn">iniciar system</button>
+      <button id="stopSystemBtn" disabled>parar system</button>
+      <button id="clearBtn">limpar</button>
+    </div>
+  </div>
+  <script src="https://cdn.socket.io/4.4.1/socket.io.min.js"></script>
+  <script src="main.js"></script>
+</body>
+</html> 
