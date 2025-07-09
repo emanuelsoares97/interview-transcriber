@@ -99,7 +99,7 @@ def stop_system_audio():
     print('[backend] Parando system_audio_worker...')
     app.system_audio_stop_event.set()
 
-# aqui é onde se arranca tudo
+
 if __name__ == '__main__':
     port = int(os.environ.get("PORT", 5000))
     socketio.run(app, debug=True, host='0.0.0.0', port=port, use_reloader=True) 

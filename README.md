@@ -1,21 +1,23 @@
-# interview transcriber
+# interview transcriber 
 
 ## para que serve
 
-Transcreve em tempo real o que dizes ao microfone e/ou o que está a tocar no pc (tipo áudio de reunião, vídeo, etc). backend em flask + whisper, frontend em javascript puro. simples e direto.
+transcreve em tempo real o que dizes ao microfone e/ou o que está a tocar no pc (tipo áudio de reunião, vídeo, etc). backend em flask + whisper, frontend em javascript puro. simples e direto.
 
-Meu objetivo foi criar algo que podesse ajudar em entrevistas, reuniões.. em inglês.
+---
 
-Uso de IA no projeto, principalmente no frontend, e no processo de audios.
+## nota sobre deploy público
+
+este projeto não tem demo online porque o whisper (modelo de transcrição) precisa de muita memória ram, e os planos gratuitos da cloud (tipo render, railway, heroku) não aguentam. para testar tudo, basta correr localmente no teu pc — está tudo explicado abaixo. se quiseres só ver como funciona, há imagens e podes pedir vídeo demo.
 
 ---
 
 ## estrutura do projeto
 
 ```
-repo-root/
+interview-transcriber/
   apps/
-    backend/    
+    backend/    # flask + socket.io (agora tudo modular)
       app.py                # arranca tudo, rotas e eventos
       audio_processing.py   # trata do áudio do mic
       system_audio_worker.py# trata do áudio do pc
@@ -27,7 +29,7 @@ repo-root/
 
 ---
 
-## como correr isto
+## como rodar isto
 
 ```bash
 git clone ...
@@ -35,10 +37,11 @@ cd interview-transcriber
 python -m venv .venv && source .venv/bin/activate
 pip install -r apps/backend/requirements.txt
 cd apps/backend
-python app.py
+python app.py  # backend
 # abre http://localhost:5000 no browser para usar o frontend
 ```
 
+---
 
 ## sobre áudio do sistema (windows, linux, macos)
 
@@ -54,14 +57,14 @@ python app.py
   - para ouvires nos fones, ativa "escutar este dispositivo" nas propriedades do "cable output".
 
   #### passo a passo vb-audio cable (windows)
-  1. instala o vb-audio cable e reinicia o pc.
-  2. vai ao painel de controlo de som > separador "reprodução".
-  3. mete o **CABLE Input (VB-Audio Virtual Cable)** como dispositivo predefinido.
-  4. vai ao separador "gravação", seleciona **CABLE Output**, clica em propriedades.
-  5. no separador "escutar", ativa **escutar este dispositivo** e escolhe os teus fones/headset.
-  6. clica em ok. agora ouves tudo nos fones e podes gravar o áudio do pc escolhendo o "cable output" no programa.
-  7. o microfone continua a funcionar normalmente.
-  8. se quiseres gravar mic + sistema ao mesmo tempo, precisas de misturar (ex: voicemeeter).
+    - instala o vb-audio cable e reinicia o pc.
+    - vai ao painel de controlo de som > separador "reprodução".
+    - mete o **CABLE Input (VB-Audio Virtual Cable)** como dispositivo predefinido.
+    - vai ao separador "gravação", seleciona **CABLE Output**, clica em propriedades.
+    - no separador "escutar", ativa **escutar este dispositivo** e escolhe os teus fones/headset.
+    - clica em ok. agora ouves tudo nos fones e podes gravar o áudio do pc escolhendo o "cable output" no programa.
+    - o microfone continua a funcionar normalmente.
+
 
 
 se não quiseres instalar nada, só funciona o microfone.
@@ -70,7 +73,6 @@ se não quiseres instalar nada, só funciona o microfone.
 
 ## dicas rápidas
 - o backend agora está dividido por ficheiros, cada um faz uma coisa (olha os comentários nos .py)
-- se não encontrar o dispositivo de áudio, avisa no frontend/backend o que falta.
 - podes escolher o dispositivo por variável de ambiente ou no config.py.
 - se quiseres mudar o modelo whisper, é só trocar no config.py (tiny, base, small, etc)
 
@@ -84,12 +86,30 @@ se não quiseres instalar nada, só funciona o microfone.
   - windows não deixa gravar o áudio do pc sem virtual cable.
 - erro de permissão:
   - corre o terminal como admin.
+- docker não apanha áudio:
+  - corre local para testar áudio.
 
 ---
 
-## queres contribuir
-- pr e issues são bem-vindos
 - licença mit
+
+---
+
+## bibliotecas principais usadas e para que servem
+
+### backend (python)
+- **flask-socketio** — comunicação em tempo real (websockets) entre frontend e backend
+- **eventlet** — permite que o flask-socketio funcione bem com websockets
+- **openai-whisper** — modelo de transcrição de áudio para texto (core do projeto)
+- **sounddevice** — usado para interagir com dispositivos de áudio (pode ser útil para gravação local)
+- **scipy** — manipulação de ficheiros de áudio (wav)
+- **ffmpeg** (chamado via subprocess) — converte ficheiros de áudio para o formato certo
+- **numpy** — manipulação de arrays de áudio
+
+### frontend (javascript)
+- **socket.io-client** — comunica com o backend em tempo real
+- **mediarecorder api** (nativa do browser) — grava o áudio do microfone
+- **javascript puro** — manipulação do DOM, UI, etc
 
 ---
 
@@ -97,3 +117,4 @@ se não quiseres instalar nada, só funciona o microfone.
 - [whisper (openai)](https://github.com/openai/whisper)
 - [vb-audio cable](https://vb-audio.com/cable/)
 - [voicemeeter](https://vb-audio.com/voicemeeter/)
+- [blackhole (macos)](https://existential.audio/blackhole/)
