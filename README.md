@@ -91,6 +91,10 @@ se não quiseres instalar nada, só funciona o microfone.
 
 ---
 
+![logo](transcriber.png)
+
+---
+
 - licença mit
 
 ---
@@ -119,4 +123,3 @@ se não quiseres instalar nada, só funciona o microfone.
 - [voicemeeter](https://vb-audio.com/voicemeeter/)
 - [blackhole (macos)](https://existential.audio/blackhole/)
 
-![logo](transcriber.png)
