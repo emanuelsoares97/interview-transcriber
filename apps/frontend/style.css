@@ -85,6 +85,17 @@ button:not(:disabled):hover {
 .transcript-error { color: #d32f2f; }
 .transcript-normal { color: #333; }
 
+.aviso {
+  background: #fff3cd;
+  color: #856404;
+  border: 1px solid #ffeeba;
+  border-radius: 6px;
+  padding: 0.8em 1em;
+  margin-bottom: 1.2em;
+  font-size: 1em;
+  text-align: center;
+}
+
 @media (max-width: 500px) {
   .container {
     padding: 1.2rem 0.5rem;

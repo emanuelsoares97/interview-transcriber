@@ -2,9 +2,11 @@
 
 ## para que serve
 
-transcreve em tempo real o que dizes ao microfone e/ou o que está a tocar no pc (tipo áudio de reunião, vídeo, etc). backend em flask + whisper, frontend em javascript puro. simples e direto.
+Transcreve em tempo real o que dizes ao microfone e/ou o que está a tocar no pc (tipo áudio de reunião, vídeo, etc). backend em flask + whisper, frontend em javascript puro. simples e direto.
 
-Meu objetivo foi criar algo que podesse ajudar em entrevistas, reuniões..
+Meu objetivo foi criar algo que podesse ajudar em entrevistas, reuniões.. em inglês.
+
+Uso de IA no projeto, principalmente no frontend, e no processo de audios.
 
 ---
 
@@ -95,4 +97,3 @@ se não quiseres instalar nada, só funciona o microfone.
 - [whisper (openai)](https://github.com/openai/whisper)
 - [vb-audio cable](https://vb-audio.com/cable/)
 - [voicemeeter](https://vb-audio.com/voicemeeter/)
-- [blackhole (macos)](https://existential.audio/blackhole/)

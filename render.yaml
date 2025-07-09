@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: interview-transcriber-backend
+    env: python
+    plan: free
+    buildCommand: pip install -r apps/backend/requirements.txt
+    startCommand: python apps/backend/app.py
+    envVars:
+      - key: PORT
+        value: 5000
+    autoDeploy: true 
