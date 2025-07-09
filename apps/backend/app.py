@@ -24,6 +24,7 @@ last_transcript = {'mic': None, 'system': None}
 # controlo do worker do áudio do sistema
 app.system_audio_thread = None
 app.system_audio_stop_event = threading.Event()
+app.system_audio_worker_running = False  # flag para saber se o worker está ativo
 
 # rota principal, serve o frontend
 @app.route('/')
@@ -85,12 +86,13 @@ def handle_audio_chunk(data):
 @socketio.on('start_system_audio')
 def start_system_audio():
     print('[backend] RECEBIDO start_system_audio')
-    if app.system_audio_thread and app.system_audio_thread.is_alive():
+    if app.system_audio_worker_running:
         print('[backend] system_audio_worker já está rodando.')
         return
     print('[backend] Iniciando system_audio_worker...')
     app.system_audio_stop_event.clear()
     app.system_audio_thread = socketio.start_background_task(system_audio_worker, socketio, app)
+    app.system_audio_worker_running = True
 
 # para o worker do áudio do sistema
 @socketio.on('stop_system_audio')
@@ -98,8 +100,9 @@ def stop_system_audio():
     print('[backend] RECEBIDO stop_system_audio')
     print('[backend] Parando system_audio_worker...')
     app.system_audio_stop_event.set()
+    app.system_audio_worker_running = False
 
-
+# aqui é onde se arranca tudo
 if __name__ == '__main__':
     port = int(os.environ.get("PORT", 5000))
     socketio.run(app, debug=True, host='0.0.0.0', port=port, use_reloader=True) 
