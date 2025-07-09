@@ -1,4 +1,6 @@
+// socket para falar com o backend (websocket)
 const socket = io({ transports: ['websocket'] });
+// apanha os elementos do html
 const mixedTranscript = document.getElementById('mixedTranscript');
 const startBtn = document.getElementById('startBtn');
 const stopBtn = document.getElementById('stopBtn');
@@ -12,6 +14,7 @@ let mediaRecorder;
 let stream;
 let recordingInterval = false;
 
+// mete texto na caixa de transcrições (mic ou system)
 function appendTranscript(text, type) {
   const p = document.createElement('p');
   p.textContent = (type === 'mic' ? '[mic] ' : '[system] ') + text;
@@ -25,6 +28,7 @@ function appendTranscript(text, type) {
   mixedTranscript.scrollTop = mixedTranscript.scrollHeight;
 }
 
+// mostra se o socket está ligado ou não
 function updateSocketStatus() {
   socketStatus.textContent = 'socket: ' + (socket.connected ? 'ligado' : 'desligado');
   console.log('[frontend] Estado do socket:', socket.connected);
@@ -34,23 +38,27 @@ updateSocketStatus();
 socket.on('connect', () => { updateSocketStatus(); console.log('[frontend] Ligado ao backend'); });
 socket.on('disconnect', () => { updateSocketStatus(); console.log('[frontend] Desligado do backend'); });
 
+// mostra o último evento recebido
 function setLastEvent(ev) {
   lastEvent.textContent = 'último evento: ' + ev;
   console.log('[frontend] Evento recebido:', ev);
 }
 
+// quando chega transcrição do mic
 socket.on('transcript', (data) => {
   setLastEvent('transcript');
   appendTranscript(data.text, 'mic');
   console.log('[frontend] Recebido transcript:', data.text);
 });
 
+// quando chega transcrição do sistema
 socket.on('system_transcript', (data) => {
   setLastEvent('system_transcript');
   appendTranscript(data.text, 'system');
   console.log('[frontend] Recebido system_transcript:', data.text);
 });
 
+// começa a gravar o mic em ciclos de 3 segundos
 async function startRecordingCycle() {
   try {
     if (!stream) {
@@ -79,6 +87,7 @@ async function startRecordingCycle() {
           reader.readAsDataURL(blob);
           chunks = [];
         }
+        // se ainda está a gravar, começa novo ciclo
         if (recordingInterval) {
           setTimeout(() => {
             console.log('[frontend] Novo ciclo de gravação');
@@ -104,6 +113,7 @@ async function startRecordingCycle() {
   }
 }
 
+// botões do mic
 startBtn.onclick = async () => {
   console.log('[frontend] Clicado iniciar mic');
   startBtn.disabled = true;
@@ -122,6 +132,7 @@ stopBtn.onclick = () => {
   }
 };
 
+// botões do sistema (áudio do pc)
 startSystemBtn.onclick = () => {
   console.log('[frontend] Clicado iniciar system');
   socket.emit('start_system_audio');
@@ -139,11 +150,13 @@ stopSystemBtn.onclick = () => {
   stopSystemBtn.disabled = true;
 };
 
+// botão limpar
 clearBtn.onclick = () => {
   console.log('[frontend] Clicado limpar');
   mixedTranscript.innerHTML = '';
 };
 
+// se o socket cair, desativa botões
 socket.on('disconnect', () => {
   startSystemBtn.disabled = false;
   stopSystemBtn.disabled = true;

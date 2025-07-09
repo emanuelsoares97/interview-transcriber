@@ -1,8 +1,10 @@
-# interview transcriber (monorepo)
+# interview transcriber
 
 ## para que serve
 
 transcreve em tempo real o que dizes ao microfone e/ou o que está a tocar no pc (tipo áudio de reunião, vídeo, etc). backend em flask + whisper, frontend em javascript puro. simples e direto.
+
+Meu objetivo foi criar algo que podesse ajudar em entrevistas, reuniões..
 
 ---
 
@@ -11,12 +13,14 @@ transcreve em tempo real o que dizes ao microfone e/ou o que está a tocar no pc
 ```
 repo-root/
   apps/
-    backend/    # flask + socket.io
+    backend/    
+      app.py                # arranca tudo, rotas e eventos
+      audio_processing.py   # trata do áudio do mic
+      system_audio_worker.py# trata do áudio do pc
+      config.py             # configs fáceis de mudar
+      requirements.txt
     frontend/   # javascript puro
-  packages/     # utilidades partilhadas
-  docker/       # docker e compose
-  .env.example  # exemplo de variáveis
-  readme.md     # este ficheiro
+  readme.md
 ```
 
 ---
@@ -28,18 +32,11 @@ git clone ...
 cd interview-transcriber
 python -m venv .venv && source .venv/bin/activate
 pip install -r apps/backend/requirements.txt
-cp .env.example .env  # se precisares
-python apps/backend/main.py  # backend
+cd apps/backend
+python app.py
 # abre http://localhost:5000 no browser para usar o frontend
 ```
 
-se preferires docker:
-
-```bash
-docker compose up --build
-```
-
----
 
 ## sobre áudio do sistema (windows, linux, macos)
 
@@ -70,9 +67,10 @@ se não quiseres instalar nada, só funciona o microfone.
 ---
 
 ## dicas rápidas
-- o backend tenta encontrar o dispositivo certo sozinho.
-- se não encontrar, avisa no frontend/backend o que falta.
-- podes escolher o dispositivo por variável de ambiente ou config.
+- o backend agora está dividido por ficheiros, cada um faz uma coisa (olha os comentários nos .py)
+- se não encontrar o dispositivo de áudio, avisa no frontend/backend o que falta.
+- podes escolher o dispositivo por variável de ambiente ou no config.py.
+- se quiseres mudar o modelo whisper, é só trocar no config.py (tiny, base, small, etc)
 
 ---
 
@@ -84,26 +82,12 @@ se não quiseres instalar nada, só funciona o microfone.
   - windows não deixa gravar o áudio do pc sem virtual cable.
 - erro de permissão:
   - corre o terminal como admin.
-- docker não apanha áudio:
-  - corre local para testar áudio.
-
----
-
-## privacidade
-- isto pode gravar qualquer áudio do pc e do mic.
-- usa com responsabilidade.
 
 ---
 
 ## queres contribuir
 - pr e issues são bem-vindos
 - licença mit
-
----
-
-## exemplo
-
-![exemplo de uso](docs/demo.gif)
 
 ---
 
